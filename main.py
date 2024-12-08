@@ -18,112 +18,105 @@ import csv
 
 from tabulate import tabulate
 from datetime import datetime
-i = 1
-l_ist = []
-user = 0
-
-
+TODAY=datetime.today()
+HEADER=["Date","Type","Category","Salary","Payment","Amount"]
+csv_list = []
+user_input = 0
 parsed_date=datetime.min
-today=datetime.today()
-print(today)
-header=["Date","Type","Category","Salary","Payment","Amount"]
-while (i > 0):
-    user = int(input("Select any of the options: \n 1.Add Expenses \n 2.View Expenses \n 3.View Summary \n 4.Exit\n"))
-    if (user == 1):
+
+while (True):
+    user_input = int(input("Select any of the options: \n 1.Add Expenses \n 2.View Expenses \n 3.View Summary \n 4.Exit\n"))
+    def AddExpenses():
         date = input("Enter Date(dd/mm/yy):")
         parsed_date = datetime.strptime(date, "%d/%m/%y")
-
         type = input("Enter Type[In/Out]:")
-        if (type == "Out"):
+        if type == "Out":
             category = input("Enter Category[Food/Rent/Groceries]:")
         desc = input("Enter Salary:")
         payment = input("Enter Payment Method[Cash/UPI/Credit]:")
         amount = input("Enter Amount:")
-        l_ist.clear()
-        l_ist.insert(0, parsed_date)
-        l_ist.insert(1, type)
-        if (type == "Out"):
-            l_ist.insert(2, category)
-        l_ist.insert(3, desc)
-        l_ist.insert(4, payment)
-        l_ist.insert(5, amount)
-        print(l_ist)
+        csv_list.clear()
+        csv_list.insert(0, parsed_date)
+        csv_list.insert(1, type)
+        if type == "Out":
+            csv_list.insert(2, category)
+        csv_list.insert(3, desc)
+        csv_list.insert(4, payment)
+        csv_list.insert(5, amount)
 
         with open('expenses.csv', 'a') as f:
 
             writer = csv.writer(f)
-            #writer.writerow(header)
-            writer.writerow(l_ist)
+            # writer.writerow(header)
+            writer.writerow(csv_list)
             print("Added Successfully")
-    if user == 2:
+    def ViewExpenses():
         with open('expenses.csv', mode='r') as f_ile:
             csv_lst = csv.reader(f_ile)
-            listt = []
-            len1 = list(csv_lst)
-            for x, line in enumerate(len1, 0):
-                listt.append(line)
-                '''print(listt)
-                print("x"+str(x))
-                print("len"+str(len(len1)))'''
-                if (x < len(len1) - 1):
-                    if (listt[x] != []):
-                        if (listt[x][1] == "In"):
+            read_list = []
+            csv_length = list(csv_lst)
+            for x, line in enumerate(csv_length, 0):
+                read_list.append(line)
+
+                if (x < len(csv_length) - 1):
+                    if (read_list[x] != []):
+                        if (read_list[x][1] == "In"):
                             line.append("-")
 
-                            print(listt)
-                            listt[x][5]=listt[x][4]
-                            listt[x][4]=listt[x][3]
-                            listt[x][3]=listt[x][2]
-                            listt[x][2]="-"
-                        table = tabulate(listt,
+                            print(read_list)
+                            read_list[x][5]=read_list[x][4]
+                            read_list[x][4]=read_list[x][3]
+                            read_list[x][3]=read_list[x][2]
+                            read_list[x][2]="-"
+                        table = tabulate(read_list,
                              headers=["Date", "Type", "Category", "Desription", "Payment Method", "Amount"],
                              tablefmt="grid"
                         )
             print(table)
-    if user == 3:
+    def ViewSummary():
         with open('expenses.csv', mode='r') as f_ile:
             csv_lst = csv.reader(f_ile)
-            listt = []
-            totIncome = 0
+            summary_list = []
+            date_list = []
+            tot_income = 0
             expenses = 0
-            avgExp = 0
-            burnRate = 0
-            lftAmt=0
-            salary=0
-            len1 = list(csv_lst)
-            print("len11111"+str(len1))
+            summary_length = list(csv_lst)
+            print("len11111"+str(summary_length))
             # print("len"+str(len(len1)))
-            for x, line in enumerate(len1, 0):
-                '''if(x>0):
-                    x+=1'''
-                print("lineee"+str(line))
-                print("listtttt"+str(listt))
-                listt.append(line)
-                '''print(listt)
-                print("x"+str(x))
-                print("len"+str(len(len1)))'''
-                if (x < len(len1) - 1):
-                    # print("hjhhh"+str(listt[x][1]))
-                    if (listt[x] != []):
-                        if (listt[x][1] == "In"):
-                            totIncome += int(listt[x][4])
-                            lftAmt = totIncome - expenses
-                            # print("Total Income:" +str( totIncome))
+            for x, line in enumerate(summary_length, 0):
+
+                summary_list.append(line)
+                if (x < len(summary_length) - 1):
+
+                    if (summary_list[x] != []):
+                        summary_date=summary_list[x][0]
+                        date_list.append(summary_date)
+                        min_date = min(date_list)
+                        date_object = datetime.strptime(min_date, "%Y-%m-%d %H:%M:%S")
+                        if (summary_list[x][1] == "In"):
+                            tot_income += int(summary_list[x][4])
+                            lft_amt = tot_income - expenses
                         else:
-                                '''print(listt[x][4])
-                                print(listt)'''
-
-                                expenses += int(listt[x][5])
-                                #salary+=desc
-                                lftAmt = totIncome - expenses
-                                expDate = today - parsed_date
-                                expDate1=expDate.days
-                                print("Exp Date:" + str(expDate1))
-                                burnRate=expenses/expDate1
-
-            print("Average Expense:" + str(burnRate))
-            print("Total Income:" + str(totIncome))
+                                expenses += int(summary_list[x][5])
+                                lft_amt = tot_income - expenses
+                                expDate = TODAY - date_object
+                                exp_date_in_days=expDate.days
+                                burn_rate=expenses/exp_date_in_days
+            print("Formatted date" + str(date_list))
+            print("Average Expense:" + str(burn_rate))
+            print("Total Income:" + str(tot_income))
             print("Expenses:" + str(expenses))
-            print("Amount Left:" + str(lftAmt))
-    if(user==4):
+            print("Amount Left:" + str(lft_amt))
+
+    if user_input == 1:
+        AddExpenses()
+    if user_input == 2:
+        ViewExpenses()
+    if user_input == 3:
+        ViewSummary()
+    if user_input==4:
+        print("Exiting the program!! Thank you")
         break
+
+
+
