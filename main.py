@@ -24,7 +24,7 @@ HEADER=["Date","Type","Category","Salary","Payment","Amount"]
 csv_list = []
 
 parsed_date=datetime.min
-def AddExpenses():
+def add_expenses():
     date = input("Enter Date(dd/mm/yy):")
     parsed_date = datetime.strptime(date, "%d/%m/%y")
     type = input("Enter Type[In/Out]:")
@@ -47,7 +47,7 @@ def AddExpenses():
         writer.writerow(csv_list)
         print("Added Successfully")
 
-def ViewExpenses():
+def view_expenses():
     with open('expenses.csv', mode='r') as f_ile:
         csv_lst = csv.reader(f_ile)
         read_list = []
@@ -67,7 +67,7 @@ def ViewExpenses():
                                      tablefmt="grid"
                                      )
         print(table)
-def ViewSummary():
+def view_summary():
     with open('expenses.csv', mode='r') as f_ile:
         csv_lst = csv.reader(f_ile)
         summary_list = []
@@ -92,23 +92,27 @@ def ViewSummary():
                         expDate = TODAY - date_object
                         exp_date_in_days = expDate.days
                         burn_rate = expenses / exp_date_in_days
-        print("Formatted date" + str(date_list))
+
         print("Average Expense:" + str(burn_rate))
         print("Total Income:" + str(tot_income))
         print("Expenses:" + str(expenses))
         print("Amount Left:" + str(lft_amt))
 
-while (True):
-    user_input = int(input("Select any of the options: \n 1.Add Expenses \n 2.View Expenses \n 3.View Summary \n 4.Exit\n"))
-    if user_input == 1:
-        AddExpenses()
-    if user_input == 2:
-        ViewExpenses()
-    if user_input == 3:
-        ViewSummary()
-    if user_input==4:
-        print("Exiting the program!! Thank you")
-        break
+def main():
+    while True:
+        user_input = int(input("Select any of the options: \n 1. Add Expenses \n 2. View Expenses \n 3. View Summary \n 4. Exit\n"))
+        if user_input == 1:
+            add_expenses()
+        elif user_input == 2:
+            view_expenses()
+        elif user_input == 3:
+            view_summary()
+        elif user_input == 4:
+            print("Exiting program!")
+            break
+        else:
+            print("Invalid Input. Please select again.")
+main()
 
 
 
