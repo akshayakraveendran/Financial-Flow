@@ -43,11 +43,9 @@ while (True):
         csv_list.insert(3, desc)
         csv_list.insert(4, payment)
         csv_list.insert(5, amount)
-
         with open('expenses.csv', 'a') as f:
 
             writer = csv.writer(f)
-            # writer.writerow(header)
             writer.writerow(csv_list)
             print("Added Successfully")
     def ViewExpenses():
@@ -57,13 +55,10 @@ while (True):
             csv_length = list(csv_lst)
             for x, line in enumerate(csv_length, 0):
                 read_list.append(line)
-
                 if (x < len(csv_length) - 1):
                     if (read_list[x] != []):
                         if (read_list[x][1] == "In"):
                             line.append("-")
-
-                            print(read_list)
                             read_list[x][5]=read_list[x][4]
                             read_list[x][4]=read_list[x][3]
                             read_list[x][3]=read_list[x][2]
@@ -81,13 +76,9 @@ while (True):
             tot_income = 0
             expenses = 0
             summary_length = list(csv_lst)
-            print("len11111"+str(summary_length))
-            # print("len"+str(len(len1)))
             for x, line in enumerate(summary_length, 0):
-
                 summary_list.append(line)
                 if (x < len(summary_length) - 1):
-
                     if (summary_list[x] != []):
                         summary_date=summary_list[x][0]
                         date_list.append(summary_date)
